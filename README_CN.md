@@ -62,7 +62,7 @@ Hunyuan-A13B采用了细粒度混合专家（Fine-grained Mixture of Experts，F
 
 ## Benchmark评估榜单 
 
-**Hunyuan-A13B-Pretrain** 在 12/14 个任务上超越了Hunyuan上一代52B激活参数的MoE模型Hunyuan-Large，证实了它在预训练任务上出色的能力。与业界更大参数量的Dense和MoE模型相比, Hunyuan-A13B在多个代码和数学任务上都取得了最高分数。在MMLU, MMLU-PRO等诸多众聚合任务上, Hunyuan-A13B达到了与Qwen3-A22B模型同等的水平，表现出优秀的综合能力。
+**Hunyuan-A13B-Pretrain** 在 12/14 个任务上超越了Hunyuan上一代52B激活参数的MoE模型Hunyuan-Large，证实了它在预训练任务上出色的能力。与业界更大参数量的Dense和MoE模型相比, Hunyuan-A13B在多个代码和数学任务上都取得了最高分数。在MMLU, MMLU-PRO等诸多聚合任务上, Hunyuan-A13B达到了与Qwen3-A22B模型同等的水平，表现出优秀的综合能力。
 
 | Model            | Hunyuan-Large | Qwen2.5-72B  | Qwen3-A22B | Hunyuan-A13B |
 |------------------|---------------|--------------|-------------|---------------|
