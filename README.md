@@ -53,24 +53,22 @@ As a powerful yet computationally efficient large model, Hunyuan-A13B is an idea
 
 Note: The following benchmarks are evaluated by TRT-LLM-backend
 
-| Model            | Hunyuan-Large | Qwen2.5-72B | Qwen3-32B | Qwen3-A22B | Hunyuan-A13B |
-|------------------|---------------|--------------|---------------|-------------|---------------|
-| MMLU             | 88.4          | 86.1         | 83.61          | 87.81        | 88.17          |
-| MMLU-Pro         | 60.20          | 58.10        | 65.54          | 68.18           | 67.23          |
-| MMLU-Redux              |  87.47         | 83.90         | 83.41          | 87.40        | 87.67          |
-| BBH        | 86.30             | 85.8            | 87.38      | 88.87        | 87.56          |
-| SuperGPQA    |  38.90         | 37.84 *         | 39.78          | 44.06           | 41.32          |
-| EvalPlus       | 75.69          | 66.05         | 72.05          | 77.60        | 78.64          |
-| MultiPL-E             | 59.13             | 61.00            | 67.06          | 65.94        | 69.33          |
-| MBPP | 72.60             | 84.70            | 78.20          | 81.40        | 83.86          |
-| CRUX-O             | 60.63          | 56.00 *         | 72.50          | 79.00        | 77.00          |
-| MATH            | 69.80          | 62.1         | 61.62          | 71.84        | 72.35          |
-| GSM8k         | 92.80             | 91.5           | 93.40          | 94.39        | 91.83          |
-| GPQA            | -             | 45.9            | 47.97          | 47.47        | 43.44          |
-| INCLUDE           | 66.48             | 76.98 *            | 67.97          | 73.46        | 74.90         |
-| MGSM              | 67.52             | 79.53 *            | 82.68          | 83.53        | 76.00          |
-| MMMLU            | 76.89          | 79.28 *         | 83.83          | 86.70        | 84.68          |
-
+| Model            | Hunyuan-Large | Qwen2.5-72B  | Qwen3-A22B | Hunyuan-A13B |
+|------------------|---------------|--------------|-------------|---------------|
+| MMLU             | 88.40          | 86.10         | 87.81        | 88.17          |
+| MMLU-Pro         | 60.20          | 58.10        | 68.18           | 67.23          |
+| MMLU-Redux              |  87.47         | 83.90         | 87.40        | 87.67          |
+| BBH        | 86.30             | 85.80            | 88.87        | 87.56          |
+| SuperGPQA    |  38.90         | 36.20          | 44.06           | 41.32          |
+| EvalPlus       | 75.69          | 65.93         | 77.60        | 78.64          |
+| MultiPL-E             | 59.13             | 60.50            | 65.94        | 69.33          |
+| MBPP | 72.60             | 76.00            | 81.40        | 83.86          |
+| CRUX-I             | 57.00          | 57.63          | -        | 70.13          |
+| CRUX-O             | 60.63          | 66.20          | 79.00        | 77.00          |
+| MATH            | 69.80          | 62.12         | 71.84        | 72.35          |
+| CMATH            | 91.30          | 84.80         | -        | 91.17          |
+| GSM8k         | 92.80             | 91.50           | 94.39        | 91.83          |
+| GPQA            | 25.18             | 45.90            | 47.47        | 49.12          |
 
 
 Hunyuan-A13B-Instruct has achieved highly competitive performance across multiple benchmarks, particularly in mathematics, science, agent domains, and more. We compared it with several powerful models, and the results are shown below.
