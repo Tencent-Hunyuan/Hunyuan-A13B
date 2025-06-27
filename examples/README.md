@@ -1,9 +1,3 @@
-<style>
-pre {
-  overflow-y: auto;
-  max-height: 300px;
-}
-</style>
 # 实体抽取任务案例
 为方便用户快速上手，下面我们准备了一个真实案例来演示如何使用`Hunyuan-A13B`进行精调。
 - 基座模型：`Hunyuan-A13B-Instruct`
@@ -13,7 +7,7 @@ pre {
 {"messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "/no_think请提取下列文章中包含的车系：\nbilstein evo s,黑黄涂装,比b14更舒适的绞牙避震 | 酷乐汽车\n"}, {"role": "assistant", "content": "<think>\n\n</think>\n<answer>\n无\n</answer>"}]}
 ```
 
-## 训练部分
+## 训练
 - 训练环境配置可参考 [train/README.md](../train/README.md)
 - 训练脚本可参考 [train_demo.sh](train_demo.sh)，需要修改其中的`model_path`、`train_data_file`和`output_path`
 - 首次加载模型耗时会较长，成功运行后会打印每个step的loss
@@ -105,9 +99,9 @@ pre {
 ```
 ![alt text](data/Loss.png)
 
-## 部署部份
-- 推理环境配置可参考 [推理README.md](../README.md)
+## 部署
+- 推理环境配置可参考 [推理README.md](../README_CN.md)
 
-## 推理部份
+## 推理
 - 推理脚本可参考 [eval_demo_vllm.py](eval_demo_vllm.py)
 - 打分脚本可参考 [compute_acc.py](compute_acc.py)

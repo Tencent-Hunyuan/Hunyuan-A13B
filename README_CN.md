@@ -31,7 +31,7 @@
 - ​**小参数量，高性能**​：仅激活130亿参数（总参数量800亿），即可在多样化基准任务中媲美更大规模模型的竞争力表现 
 - ​**混合推理支持**​：同时支持快思考和慢思考两种模式，支持用户灵活选择 
 - ​**超长上下文理解**​：原生支持256K上下文窗口，在长文本任务中保持稳定性能
-- ​**增强Agent能力**​：优化Agent能力，在BFCL-v3、τ-Bench等智能体基准测试中领先
+- ​**增强Agent能力**​：优化Agent能力，在BFCL-v3、τ-Bench、C3-Bench等智能体基准测试中领先
 - ​**高效推理**​：采用分组查询注意力（GQA）策略，支持多量化格式，实现高效推理
     
 
@@ -44,7 +44,7 @@
 ## 新闻
 <br>
 
-* 2025.6.26 我们在Hugging Face开源了 **Hunyuan-A13B-Instruct**，**Hunyuan-A13B-Pretrain**, **Hunyuan-A13B-Instruct-FP8**， **Hunyuan-A13B-Instruct-GPTQ-Int4**。并发布了技术报告和训练推理操作手册，详细介绍了模型能力和训练与推理的操作。
+* 2025.6.26 我们在Hugging Face开源了 **Hunyuan-A13B-Instruct**，**Hunyuan-A13B-Pretrain**, **Hunyuan-A13B-Instruct-FP8**， **Hunyuan-A13B-Instruct-GPTQ-Int4**。并发布了<a href="report/Hunyuan_A13B_Technical_Report.pdf">技术报告</a>和训练推理操作手册，详细介绍了模型能力和训练与推理的操作。
 
 ## 模型结构
 
@@ -83,16 +83,16 @@ Hunyuan-A13B采用了细粒度混合专家（Fine-grained Mixture of Experts，F
 
 **Hunyuan-A13B-Instruct** 在多项基准测试中取得了极具有竞争力的表现，尤其是在数学、科学、agent等领域。我们与一些强力模型进行了对比，结果如下所示。
 
-| Topic               | Bench                         | OpenAI-o1-1217 | DeepSeek R1 | Qwen3-A22B | Hunyuan-A13B-Instruct |
-|:-------------------:|:-----------------------------:|:-------------:|:------------:|:-----------:|:---------------------:|
-| **Mathematics**     | AIME 2024<br>AIME 2025<br>MATH | 74.3<br>79.2<br>96.4 | 79.8<br>70<br>94.9 | 85.7<br>81.5<br>94.0 | 87.3<br>76.8<br>94.3 |
-| **Science**         | GPQA-Diamond<br>OlympiadBench | 78<br>83.1 | 71.5<br>82.4 | 71.1<br>85.7 | 71.2<br>82.7 |
-| **Coding**          | Livecodebench<br>Fullstackbench<br>ArtifactsBench | 63.9<br>64.6<br>38.6 | 65.9<br>71.6<br>44.6 | 70.7<br>65.6<br>44.6 | 63.9<br>67.8<br>43 |
-| **Reasoning**       | BBH<br>DROP<br>ZebraLogic    | 80.4<br>90.2<br>81 | 83.7<br>92.2<br>78.7 | 88.9<br>90.3<br>80.3 | 89.1<br>91.1<br>84.7 |
-| **Instruction<br>Following** | IF-Eval<br>SysBench  | 91.8<br>82.5 | 88.3<br>77.7 | 83.4<br>74.2 | 84.7<br>76.1 |
-| **Text<br>Creation**| LengthCtrl<br>InsCtrl       | 60.1<br>74.8 | 55.9<br>69 | 53.3<br>73.7 | 55.4<br>71.9 |
-| **NLU**             | ComplexNLU<br>Word-Task     | 64.7<br>67.1 | 64.5<br>76.3 | 59.8<br>56.4 | 61.2<br>62.9 |
-| **Agent**           | BDCL v3<br> τ-Bench<br>ComplexFuncBench<br> C3-Bench | 67.8<br>60.4<br>47.6<br>58.8 | 56.9<br>43.8<br>41.1<br>55.3 | 70.8<br>44.6<br>40.6<br>51.7 | 78.3<br>54.7<br>61.2<br>63.5 |
+| Topic               |                        Bench                         | OpenAI-o1-1217 | DeepSeek R1 | Qwen3-A22B | Hunyuan-A13B-Instruct |
+|:-------------------:|:----------------------------------------------------:|:-------------:|:------------:|:-----------:|:---------------------:|
+| **Mathematics**     |            AIME 2024<br>AIME 2025<br>MATH            | 74.3<br>79.2<br>96.4 | 79.8<br>70<br>94.9 | 85.7<br>81.5<br>94.0 | 87.3<br>76.8<br>94.3 |
+| **Science**         |            GPQA-Diamond<br>OlympiadBench             | 78<br>83.1 | 71.5<br>82.4 | 71.1<br>85.7 | 71.2<br>82.7 |
+| **Coding**          |  Livecodebench<br>Fullstackbench<br>ArtifactsBench   | 63.9<br>64.6<br>38.6 | 65.9<br>71.6<br>44.6 | 70.7<br>65.6<br>44.6 | 63.9<br>67.8<br>43 |
+| **Reasoning**       |              BBH<br>DROP<br>ZebraLogic               | 80.4<br>90.2<br>81 | 83.7<br>92.2<br>78.7 | 88.9<br>90.3<br>80.3 | 89.1<br>91.1<br>84.7 |
+| **Instruction<br>Following** |                 IF-Eval<br>SysBench                  | 91.8<br>82.5 | 88.3<br>77.7 | 83.4<br>74.2 | 84.7<br>76.1 |
+| **Text<br>Creation**|                LengthCtrl<br>InsCtrl                 | 60.1<br>74.8 | 55.9<br>69 | 53.3<br>73.7 | 55.4<br>71.9 |
+| **NLU**             |               ComplexNLU<br>Word-Task                | 64.7<br>67.1 | 64.5<br>76.3 | 59.8<br>56.4 | 61.2<br>62.9 |
+| **Agent**           | BFCL v3<br> τ-Bench<br>ComplexFuncBench<br> C3-Bench | 67.8<br>60.4<br>47.6<br>58.8 | 56.9<br>43.8<br>41.1<br>55.3 | 70.8<br>44.6<br>40.6<br>51.7 | 78.3<br>54.7<br>61.2<br>63.5 |
 
 
 ## 数据
@@ -308,8 +308,8 @@ Int4量化我们采用[GPTQ](https://arxiv.org/abs/2210.17323 )算法实现W4A16
 | OlympiadBench  |         82.7          |              84.0               |
 |   AIME 2024    |         87.3          |              86.7               |
 |     Gsm8k      |         94.39         |              94.24              |
-|      BBH       |         88.34         |              87.91              |
-|      DROP      |         91.12         |              91.05              |
+|      BBH       |         89.1         |              87.91              |
+|      DROP      |         91.1         |              91.05              |
 
 &nbsp;
 
@@ -386,16 +386,36 @@ python3 quickstart_advanced.py --model_dir "HunyuanLLM模型路径" --tp_size 4 
 
 下面我们展示使用`TensorRT-LLM`服务化的方式部署模型和请求。
 
+准备配置文件：
+
+```
+cat >/path/to/extra-llm-api-config.yml <<EOF
+use_cuda_graph: true
+cuda_graph_padding_enabled: true
+cuda_graph_batch_sizes:
+- 1
+- 2
+- 4
+- 8
+- 16
+- 32
+print_iter_log: true
+EOF
+```
+
+启动服务：
+
 ```shell
 trtllm-serve \
   /path/to/HunYuan-moe-A13B \
   --host localhost \
   --port 8000 \
   --backend pytorch \
-  --max_batch_size 128 \
+  --max_batch_size 32 \
   --max_num_tokens 16384 \
   --tp_size 2 \
-  --kv_cache_free_gpu_memory_fraction 0.95 \
+  --kv_cache_free_gpu_memory_fraction 0.6 \
+  --trust_remote_code \
   --extra_llm_api_options /path/to/extra-llm-api-config.yml
 ```
 
@@ -405,12 +425,10 @@ curl -X POST "http://localhost:8000/v1/chat/completions" \
   -H "Content-Type: application/json" \
   --data '{
     "model": "HunYuan/HunYuan-80B-A13B",
-           "Max_tokens": 1024,
-           "Temperature": 0,
     "messages": [
       {
         "role": "user",
-        "content": "What is Tencent HunYuan?"
+        "content": "Write a short summary of the benefits of regular exercise"
       }
     ]
   }'
@@ -701,7 +719,7 @@ model_path="HunyuanLLM模型路径"
 python3 -u -m sglang.launch_server \
     --model-path $model_path \
     --tp 4 \
-    --trust-remote-code \
+    --trust-remote-code
 ```
 
 服务启动成功后, 运行请求脚本：
