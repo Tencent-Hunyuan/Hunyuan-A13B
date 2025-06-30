@@ -236,20 +236,18 @@ def make_supervised_data_module(tokenizer, data_args) -> Dict:
     return dict(train_dataset=train_dataset, eval_dataset=None, data_collator=data_collator)
 
 
-# full 模型训练时，需要修改 config.json 以及拷贝模型与配置文件支持 Auto load
+# for full model training, change the config.json, copy the model and configuration to support Auto load
 class CustomSaveCallback(TrainerCallback):
     def on_save(self, args, state, control, **kwargs):
         if torch.distributed.get_rank() == 0:
             output_dir = os.path.join(args.output_dir, f"{PREFIX_CHECKPOINT_DIR}-{state.global_step}")
 
-            # 拷贝tokenizer, 模型和配置文件
+            # copy tokenizer, model and configration files
             model_path = os.path.join(args.model_name_or_path, 'modeling_hunyuan.py')
             hy_model_path = os.path.join(args.model_name_or_path, 'hunyuan.py')
-            vit_model_path = os.path.join(args.model_name_or_path, 'vit_model.py')
             config_path = os.path.join(args.model_name_or_path, 'configuration_hunyuan.py')
             shutil.copy(model_path, os.path.join(output_dir, 'modeling_hunyuan.py'))
             shutil.copy(hy_model_path, os.path.join(output_dir, 'hunyuan.py'))
-            shutil.copy(vit_model_path, os.path.join(output_dir, 'vit_model.py'))
             shutil.copy(config_path, os.path.join(output_dir, 'configuration_hunyuan.py'))
             shutil.copy(
                 os.path.join(args.tokenizer_name_or_path, 'generation_config.json'), 
@@ -268,7 +266,7 @@ class CustomSaveCallback(TrainerCallback):
                 os.path.join(output_dir, 'tokenization_hy.py')
             )
 
-            # 修改 config.json，增加 auto_map
+            # modify config.json, add auto_map
             if os.path.exists(os.path.join(output_dir, "config.json")):
                 config = json.load(open(os.path.join(output_dir, "config.json"), 'r'))
                 config['auto_map'] = {
@@ -309,32 +307,32 @@ def train():
             **init_kwargs
         )
     else:
-        from models.modeling_hunyuan import HunYuanForCausalLM, HunYuanMoE
+        from models.modeling_hunyuan import HunYuanMoEV1ForCausalLM, HunYuanMoE
         from models.configuration_hunyuan import HunYuanConfig
         print(f"Model name or path does not exist: {training_args.model_name_or_path}, \
               use random initialized model instead.")
-        # 定义模型
+        # model defination
         config = HunYuanConfig(
-            vocab_size=tokenizer.vocab_size,  # 词表大小
-            hidden_size=model_args.hidden_size,        # 隐藏层大小
-            intermediate_size=model_args.intermediate_size,  # FFN 层大小
-            max_position_embeddings=training_args.model_max_length,   # 最大序列长度
+            vocab_size=tokenizer.vocab_size,  # vocab size
+            hidden_size=model_args.hidden_size,        # hidden layer size
+            intermediate_size=model_args.intermediate_size,  # FFN layer size
+            max_position_embeddings=training_args.model_max_length,   # maximum sequence length
             moe_topk=model_args.moe_topk,  # topk
-            num_experts=model_args.num_experts,  # expert 数量
-            num_attention_heads=model_args.num_attention_heads,  # 多头注意力头数
-            num_key_value_heads=model_args.num_key_value_heads,  # GQA 时的 key value 头数
-            num_hidden_layers=model_args.num_layers,    # Transformer 层数
-            cla_share_factor=model_args.cla_share_factor,  # CLA 因子
+            num_experts=model_args.num_experts,  # expert number
+            num_attention_heads=model_args.num_attention_heads,  # multihead attention number
+            num_key_value_heads=model_args.num_key_value_heads,  # key value number for GQA
+            num_hidden_layers=model_args.num_layers,    # Transformer layer
+            cla_share_factor=model_args.cla_share_factor,  # CLA factor
             use_cla=model_args.use_cla,
             use_mixed_mlp_moe=model_args.use_mixed_mlp_moe,
-            num_shared_expert=model_args.num_shared_expert,
+            num_shared_expert=[model_args.num_shared_expert],
             use_qk_norm=model_args.use_qk_norm,
             model_type='hunyuan',
             tie_word_embeddings=model_args.tie_word_embeddings,
             **init_kwargs
         )
         with deepspeed.zero.Init(dtype=init_kwargs["torch_dtype"], config_dict_or_path=training_args.deepspeed):
-            model = HunYuanForCausalLM(config)
+            model = HunYuanMoEV1ForCausalLM(config)
     
     if model_args.train_attention_params_only:
         for name, param in model.named_parameters():
@@ -342,7 +340,7 @@ def train():
                 param.requires_grad = False
 
     if model_args.use_lora:
-        # 定义 Lora 配置
+        # define Lora configuration
         lora_config = LoraConfig(
             r=model_args.lora_rank,
             lora_alpha=model_args.lora_alpha,
@@ -353,7 +351,7 @@ def train():
         )
         model = get_peft_model(model, lora_config)
     
-    # 用 zero3 的时候不切分 MoE 参数
+    # donnot split MoE weights when using zero3
     if model_args.num_experts > 0 \
         and training_args.make_moe_param_leaf_module and \
             training_args.deepspeed_plugin.zero_stage == 3:

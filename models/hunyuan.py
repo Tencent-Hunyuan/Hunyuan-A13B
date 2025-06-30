@@ -41,7 +41,6 @@ from transformers.utils.import_utils import is_torch_fx_available
 from transformers.generation.utils import GenerateOutput
 from .configuration_hunyuan import HunYuanConfig
 from .modeling_hunyuan import HunYuanDecoderLayer, HunYuanRMSNorm
-from .vit_model import NaVitForward, VitForward, Vit 
 
 
 if is_flash_attn_2_available():
@@ -363,16 +362,7 @@ class HunYuanMoEV1ForCausalLM(HunYuanPreTrainedModel):
 
     def __init__(self, config: HunYuanConfig):
         super().__init__(config)
-        if config.vit_path is not None:
-            if "-tp" in config.vit_type:
-                config.vit_type = config.vit_type.replace("-tp", "")
-            self.vit_type = config.vit_type
-            if self.vit_type not in ['NaVit', 'EvaVit']:
-                if config.vit_mapping_type == 'mlp':
-                    self.vit_linear_encoder = torch.nn.Linear(config.hidden_size, config.hidden_size)
-            self.vit = Vit(config)
-        else:
-            self.vit = None
+        
         self.config = config
         self.model = HunYuanModel(config)
         self.add_classification_head = config.add_classification_head
@@ -643,15 +633,6 @@ class MultimodelHunYuanForCausalLM(HunYuanMoEV1ForCausalLM):
         video_start_id = self.config.video_start_id
         video_end_id = self.config.video_end_id
 
-        if self.vit is not None and imgs is not None:
-            encoder_input = self.model.embed_tokens(input_ids)
-            if self.vit_type in ['NaVit', 'EvaVit', 'AnyResVit']:
-                inputs_embeds, input_ids = NaVitForward(input_ids, encoder_input, self.vit, imgs, imgs_pos, self.config.vit_input_resolution, \
-                    im_start_id, im_end_id, image_token_id, self.config.anyres_vit_two_views, self.config.torch_dtype)
-            else:
-                inputs_embeds, input_ids = VitForward(input_ids, encoder_input, self.vit, self.vit_linear_encoder, imgs, imgs_pos, \
-                    self.config.vit_input_resolution, self.config.vit_mapping_type, self.config.vit_patch, self.config.vit_token)
-
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
         output_hidden_states = (
             output_hidden_states if output_hidden_states is not None else self.config.output_hidden_states
@@ -738,15 +719,6 @@ class MultimodelHunYuanForCausalLM(HunYuanMoEV1ForCausalLM):
         if "inputs_embeds" in kwargs:
             raise NotImplementedError("`inputs_embeds` is not supported")
         
-        if self.vit is not None:
-            encoder_input = self.model.embed_tokens(inputs)
-            if self.vit_type in ['NaVit', 'EvaVit', 'AnyResVit']:
-                inputs_embeds, input_ids = NaVitForward(inputs, encoder_input, self.vit, imgs, imgs_pos, self.config.vit_input_resolution, \
-                    self.config.im_start_id, self.config.im_end_id, self.config.image_token_id, self.config.anyres_vit_two_views, self.config.torch_dtype)
-            else:
-                inputs_embeds, input_ids = VitForward(inputs, encoder_input, self.vit, self.vit_linear_encoder, imgs, imgs_pos, \
-                    self.config.vit_input_resolution, self.config.vit_mapping_type, self.config.vit_patch, self.config.vit_token)
-
         return super().generate(
             inputs=input_ids,
             position_ids=position_ids,
