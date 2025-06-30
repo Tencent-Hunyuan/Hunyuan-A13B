@@ -8,15 +8,16 @@
 </p><p></p>
 
 <p align="center">
-    🫣&nbsp;<a href="https://huggingface.co/tencent/Hunyuan-A13B-Instruct"><b>Hugging Face</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-    🖥️&nbsp;<a href="https://llm.hunyuan.tencent.com/" style="color: red;"><b>Official Website</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    🤗&nbsp;<a href="https://huggingface.co/tencent/Hunyuan-A13B-Instruct"><b>Hugging Face</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    🖥️&nbsp;<a href="https://hunyuan.tencent.com" style="color: red;"><b>Official Website</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     🕖&nbsp;<a href="https://cloud.tencent.com/product/hunyuan"><b>HunyuanAPI</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     🕹️&nbsp;<a href="https://hunyuan.tencent.com/?model=hunyuan-a13b"><b>Demo</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     <img src="https://avatars.githubusercontent.com/u/109945100?s=200&v=4" width="16"/>&nbsp;<a href="https://modelscope.cn/models/Tencent-Hunyuan/Hunyuan-A13B-Instruct"><b>ModelScope</b></a>
 </p>
 
 <p align="center">
-    <a href="https://github.com/Tencent/Hunyuan-A13B"><b>GITHUB</b></a>
+    <a href="https://github.com/Tencent-Hunyuan/Hunyuan-A13B"><b>GITHUB</b></a> |
+    <a href="report/Hunyuan_A13B_Technical_Report.pdf"><b>Technical Report</b></a>
 </p>
 
 
@@ -31,7 +32,7 @@
 - ​**小参数量，高性能**​：仅激活130亿参数（总参数量800亿），即可在多样化基准任务中媲美更大规模模型的竞争力表现 
 - ​**混合推理支持**​：同时支持快思考和慢思考两种模式，支持用户灵活选择 
 - ​**超长上下文理解**​：原生支持256K上下文窗口，在长文本任务中保持稳定性能
-- ​**增强Agent能力**​：优化Agent能力，在BFCL-v3、τ-Bench等智能体基准测试中领先
+- ​**增强Agent能力**​：优化Agent能力，在BFCL-v3、τ-Bench、C3-Bench等智能体基准测试中领先
 - ​**高效推理**​：采用分组查询注意力（GQA）策略，支持多量化格式，实现高效推理
     
 
@@ -44,7 +45,7 @@
 ## 新闻
 <br>
 
-* 2025.6.26 我们在Hugging Face开源了 **Hunyuan-A13B-Instruct**，**Hunyuan-A13B-Pretrain**, **Hunyuan-A13B-Instruct-FP8**， **Hunyuan-A13B-Instruct-GPTQ-Int4**。并发布了技术报告和训练推理操作手册，详细介绍了模型能力和训练与推理的操作。
+* 2025.6.26 我们在Hugging Face开源了 **Hunyuan-A13B-Instruct**，**Hunyuan-A13B-Pretrain**, **Hunyuan-A13B-Instruct-FP8**， **Hunyuan-A13B-Instruct-GPTQ-Int4**。并发布了<a href="report/Hunyuan_A13B_Technical_Report.pdf">技术报告</a>和训练推理操作手册，详细介绍了模型能力和训练与推理的操作。
 
 ## 模型结构
 
@@ -83,16 +84,16 @@ Hunyuan-A13B采用了细粒度混合专家（Fine-grained Mixture of Experts，F
 
 **Hunyuan-A13B-Instruct** 在多项基准测试中取得了极具有竞争力的表现，尤其是在数学、科学、agent等领域。我们与一些强力模型进行了对比，结果如下所示。
 
-| Topic               | Bench                         | OpenAI-o1-1217 | DeepSeek R1 | Qwen3-A22B | Hunyuan-A13B-Instruct |
-|:-------------------:|:-----------------------------:|:-------------:|:------------:|:-----------:|:---------------------:|
-| **Mathematics**     | AIME 2024<br>AIME 2025<br>MATH | 74.3<br>79.2<br>96.4 | 79.8<br>70<br>94.9 | 85.7<br>81.5<br>94.0 | 87.3<br>76.8<br>94.3 |
-| **Science**         | GPQA-Diamond<br>OlympiadBench | 78<br>83.1 | 71.5<br>82.4 | 71.1<br>85.7 | 71.2<br>82.7 |
-| **Coding**          | Livecodebench<br>Fullstackbench<br>ArtifactsBench | 63.9<br>64.6<br>38.6 | 65.9<br>71.6<br>44.6 | 70.7<br>65.6<br>44.6 | 63.9<br>67.8<br>43 |
-| **Reasoning**       | BBH<br>DROP<br>ZebraLogic    | 80.4<br>90.2<br>81 | 83.7<br>92.2<br>78.7 | 88.9<br>90.3<br>80.3 | 89.1<br>91.1<br>84.7 |
-| **Instruction<br>Following** | IF-Eval<br>SysBench  | 91.8<br>82.5 | 88.3<br>77.7 | 83.4<br>74.2 | 84.7<br>76.1 |
-| **Text<br>Creation**| LengthCtrl<br>InsCtrl       | 60.1<br>74.8 | 55.9<br>69 | 53.3<br>73.7 | 55.4<br>71.9 |
-| **NLU**             | ComplexNLU<br>Word-Task     | 64.7<br>67.1 | 64.5<br>76.3 | 59.8<br>56.4 | 61.2<br>62.9 |
-| **Agent**           | BDCL v3<br> τ-Bench<br>ComplexFuncBench<br> C3-Bench | 67.8<br>60.4<br>47.6<br>58.8 | 56.9<br>43.8<br>41.1<br>55.3 | 70.8<br>44.6<br>40.6<br>51.7 | 78.3<br>54.7<br>61.2<br>63.5 |
+| Topic               |                        Bench                         | OpenAI-o1-1217 | DeepSeek R1 | Qwen3-A22B | Hunyuan-A13B-Instruct |
+|:-------------------:|:----------------------------------------------------:|:-------------:|:------------:|:-----------:|:---------------------:|
+| **Mathematics**     |            AIME 2024<br>AIME 2025<br>MATH            | 74.3<br>79.2<br>96.4 | 79.8<br>70<br>94.9 | 85.7<br>81.5<br>94.0 | 87.3<br>76.8<br>94.3 |
+| **Science**         |            GPQA-Diamond<br>OlympiadBench             | 78<br>83.1 | 71.5<br>82.4 | 71.1<br>85.7 | 71.2<br>82.7 |
+| **Coding**          |  Livecodebench<br>Fullstackbench<br>ArtifactsBench   | 63.9<br>64.6<br>38.6 | 65.9<br>71.6<br>44.6 | 70.7<br>65.6<br>44.6 | 63.9<br>67.8<br>43 |
+| **Reasoning**       |              BBH<br>DROP<br>ZebraLogic               | 80.4<br>90.2<br>81 | 83.7<br>92.2<br>78.7 | 88.9<br>90.3<br>80.3 | 89.1<br>91.1<br>84.7 |
+| **Instruction<br>Following** |                 IF-Eval<br>SysBench                  | 91.8<br>82.5 | 88.3<br>77.7 | 83.4<br>74.2 | 84.7<br>76.1 |
+| **Text<br>Creation**|                LengthCtrl<br>InsCtrl                 | 60.1<br>74.8 | 55.9<br>69 | 53.3<br>73.7 | 55.4<br>71.9 |
+| **NLU**             |               ComplexNLU<br>Word-Task                | 64.7<br>67.1 | 64.5<br>76.3 | 59.8<br>56.4 | 61.2<br>62.9 |
+| **Agent**           | BFCL v3<br> τ-Bench<br>ComplexFuncBench<br> C3-Bench | 67.8<br>60.4<br>47.6<br>58.8 | 56.9<br>43.8<br>41.1<br>55.3 | 70.8<br>44.6<br>40.6<br>51.7 | 78.3<br>54.7<br>61.2<br>63.5 |
 
 
 ## 数据
@@ -308,8 +309,8 @@ Int4量化我们采用[GPTQ](https://arxiv.org/abs/2210.17323 )算法实现W4A16
 | OlympiadBench  |         82.7          |              84.0               |
 |   AIME 2024    |         87.3          |              86.7               |
 |     Gsm8k      |         94.39         |              94.24              |
-|      BBH       |         88.34         |              87.91              |
-|      DROP      |         91.12         |              91.05              |
+|      BBH       |         89.1         |              87.91              |
+|      DROP      |         91.1         |              91.05              |
 
 &nbsp;
 
@@ -333,7 +334,7 @@ docker pull docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-trtllm
 docker pull hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm
 
 # 启动
-docker run --name hunyuanLLM_infer --rm -it --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 --gpus=all hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm     
+docker run --privileged --user root --name hunyuanLLM_infer --rm -it --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 --gpus=all hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm     
 ```
 
 注: Docker容器权限管理。以上代码采用特权模式（--privileged）启动Docker容器会赋予容器较高的权限，增加数据泄露和集群安全风险。建议在非必要情况下避免使用特权模式，以降低安全威胁。对于必须使用特权模式的场景，应进行严格的安全评估，并实施相应的安全监控、加固措施。
@@ -349,26 +350,77 @@ docker run --name hunyuanLLM_infer --rm -it --ipc=host --ulimit memlock=-1 --uli
 
 
 ```python
-from tensorrt_llm import SamplingParams
-from tensorrt_llm._torch import LLM
-from tensorrt_llm._torch.pyexecutor.config import PyTorchConfig
-from tensorrt_llm.llmapi import (EagleDecodingConfig, KvCacheConfig,
-                                 MTPDecodingConfig)
+def setup_llm(args):
+    kv_cache_config = KvCacheConfig(
+        enable_block_reuse=not args.disable_kv_cache_reuse,
+        free_gpu_memory_fraction=args.kv_cache_fraction,
+    )
+    spec_config = None
+    
+    hf_ckpt_path="$your_hunyuan_model_path"
+    tokenizer = AutoTokenizer.from_pretrained(hf_ckpt_path, trust_remote_code=True)
+    llm = LLM(
+        tokenizer=tokenizer,
+        model=args.model_dir,
+        backend='pytorch',
+        disable_overlap_scheduler=args.disable_overlap_scheduler,
+        kv_cache_dtype=args.kv_cache_dtype,
+        kv_cache_config=kv_cache_config,
+        attn_backend=args.attention_backend,
+        use_cuda_graph=args.use_cuda_graph,
+        cuda_graph_padding_enabled=args.cuda_graph_padding_enabled,
+        cuda_graph_batch_sizes=args.cuda_graph_batch_sizes,
+        load_format=args.load_format,
+        print_iter_log=args.print_iter_log,
+        enable_iter_perf_stats=args.print_iter_log,
+        torch_compile_config=TorchCompileConfig(
+            enable_fullgraph=args.use_torch_compile,
+            enable_inductor=args.use_torch_compile,
+            enable_piecewise_cuda_graph= \
+                args.use_piecewise_cuda_graph)
+        if args.use_torch_compile else None,
+        moe_backend=args.moe_backend,
+        enable_trtllm_sampler=args.enable_trtllm_sampler,
+        max_seq_len=args.max_seq_len,
+        max_batch_size=args.max_batch_size,
+        max_num_tokens=args.max_num_tokens,
+        enable_attention_dp=args.enable_attention_dp,
+        tensor_parallel_size=args.tp_size,
+        pipeline_parallel_size=args.pp_size,
+        moe_expert_parallel_size=args.moe_ep_size,
+        moe_tensor_parallel_size=args.moe_tp_size,
+        moe_cluster_parallel_size=args.moe_cluster_size,
+        enable_chunked_prefill=args.enable_chunked_prefill,
+        speculative_config=spec_config,
+        trust_remote_code=args.trust_remote_code,
+        gather_generation_logits=args.return_generation_logits)
 
-prompt = "Write a short summary of the benefits of regular exercise"
+    sampling_params = SamplingParams(
+        end_id=127960,
+        max_tokens=args.max_tokens,
+        temperature=args.temperature,
+        top_k=args.top_k,
+        top_p=args.top_p,
+        return_context_logits=args.return_context_logits,
+        return_generation_logits=args.return_generation_logits,
+        logprobs=args.logprobs)
+    return llm, sampling_params
+
 
 def main():
     args = parse_arguments()
+    prompts = args.prompt if args.prompt else example_prompts
 
     llm, sampling_params = setup_llm(args)
     new_prompts = []
-    if args.apply_chat_template:
+    for prompt in prompts:
         messages = [{"role": "user", "content": f"{prompt}"}]
-        new_prompts.append(llm.tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True)
-        )
-
-    outputs = llm.generate(new_prompts, sampling_params)
+        new_prompts.append(
+            llm.tokenizer.apply_chat_template(messages,
+                                                tokenize=False,
+                                                add_generation_prompt=True))
+    prompts = new_prompts
+    outputs = llm.generate(prompts, sampling_params)
 
     for i, output in enumerate(outputs):
         prompt = output.prompt
@@ -386,16 +438,36 @@ python3 quickstart_advanced.py --model_dir "HunyuanLLM模型路径" --tp_size 4 
 
 下面我们展示使用`TensorRT-LLM`服务化的方式部署模型和请求。
 
+准备配置文件：
+
+```
+cat >/path/to/extra-llm-api-config.yml <<EOF
+use_cuda_graph: true
+cuda_graph_padding_enabled: true
+cuda_graph_batch_sizes:
+- 1
+- 2
+- 4
+- 8
+- 16
+- 32
+print_iter_log: true
+EOF
+```
+
+启动服务：
+
 ```shell
 trtllm-serve \
   /path/to/HunYuan-moe-A13B \
   --host localhost \
   --port 8000 \
   --backend pytorch \
-  --max_batch_size 128 \
+  --max_batch_size 32 \
   --max_num_tokens 16384 \
   --tp_size 2 \
-  --kv_cache_free_gpu_memory_fraction 0.95 \
+  --kv_cache_free_gpu_memory_fraction 0.6 \
+  --trust_remote_code \
   --extra_llm_api_options /path/to/extra-llm-api-config.yml
 ```
 
@@ -405,12 +477,10 @@ curl -X POST "http://localhost:8000/v1/chat/completions" \
   -H "Content-Type: application/json" \
   --data '{
     "model": "HunYuan/HunYuan-80B-A13B",
-           "Max_tokens": 1024,
-           "Temperature": 0,
     "messages": [
       {
         "role": "user",
-        "content": "What is Tencent HunYuan?"
+        "content": "Write a short summary of the benefits of regular exercise"
       }
     ]
   }'
@@ -701,7 +771,7 @@ model_path="HunyuanLLM模型路径"
 python3 -u -m sglang.launch_server \
     --model-path $model_path \
     --tp 4 \
-    --trust-remote-code \
+    --trust-remote-code
 ```
 
 服务启动成功后, 运行请求脚本：
