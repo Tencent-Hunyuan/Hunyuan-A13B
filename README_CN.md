@@ -749,17 +749,18 @@ prompts.append(tokenizer.apply_chat_template(
 ))
 print(prompts)
 
-llm = sgl.Engine(
-    model_path=model_path,
-    tp_size=4,
-    trust_remote_code=True,
-    mem_fraction_static=0.7,
-)
+if __name__ == '__main__':
+    llm = sgl.Engine(
+        model_path=model_path,
+        tp_size=4,
+        trust_remote_code=True,
+        mem_fraction_static=0.7,
+    )
 
-sampling_params = {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "max_new_tokens": 4096}
-outputs = llm.generate(prompts, sampling_params)
-for prompt, output in zip(prompts, outputs):
-    print(f"Prompt: {prompt}\nGenerated text: {output['text']}")
+    sampling_params = {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "max_new_tokens": 4096}
+    outputs = llm.generate(prompts, sampling_params)
+    for prompt, output in zip(prompts, outputs):
+        print(f"Prompt: {prompt}\nGenerated text: {output['text']}")
 ```
 
 #### 方式2：服务化推理
