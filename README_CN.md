@@ -8,7 +8,7 @@
 </p><p></p>
 
 <p align="center">
-    🫣&nbsp;<a href="https://huggingface.co/tencent/Hunyuan-A13B-Instruct"><b>Hugging Face</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    🤗&nbsp;<a href="https://huggingface.co/tencent/Hunyuan-A13B-Instruct"><b>Hugging Face</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     🖥️&nbsp;<a href="https://hunyuan.tencent.com" style="color: red;"><b>Official Website</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     🕖&nbsp;<a href="https://cloud.tencent.com/product/hunyuan"><b>HunyuanAPI</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     🕹️&nbsp;<a href="https://hunyuan.tencent.com/?model=hunyuan-a13b"><b>Demo</b></a>&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -334,7 +334,7 @@ docker pull docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-trtllm
 docker pull hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm
 
 # 启动
-docker run --name hunyuanLLM_infer --rm -it --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 --gpus=all hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm     
+docker run --privileged --user root --name hunyuanLLM_infer --rm -it --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 --gpus=all hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm     
 ```
 
 注: Docker容器权限管理。以上代码采用特权模式（--privileged）启动Docker容器会赋予容器较高的权限，增加数据泄露和集群安全风险。建议在非必要情况下避免使用特权模式，以降低安全威胁。对于必须使用特权模式的场景，应进行严格的安全评估，并实施相应的安全监控、加固措施。
@@ -350,26 +350,77 @@ docker run --name hunyuanLLM_infer --rm -it --ipc=host --ulimit memlock=-1 --uli
 
 
 ```python
-from tensorrt_llm import SamplingParams
-from tensorrt_llm._torch import LLM
-from tensorrt_llm._torch.pyexecutor.config import PyTorchConfig
-from tensorrt_llm.llmapi import (EagleDecodingConfig, KvCacheConfig,
-                                 MTPDecodingConfig)
+def setup_llm(args):
+    kv_cache_config = KvCacheConfig(
+        enable_block_reuse=not args.disable_kv_cache_reuse,
+        free_gpu_memory_fraction=args.kv_cache_fraction,
+    )
+    spec_config = None
+    
+    hf_ckpt_path="$your_hunyuan_model_path"
+    tokenizer = AutoTokenizer.from_pretrained(hf_ckpt_path, trust_remote_code=True)
+    llm = LLM(
+        tokenizer=tokenizer,
+        model=args.model_dir,
+        backend='pytorch',
+        disable_overlap_scheduler=args.disable_overlap_scheduler,
+        kv_cache_dtype=args.kv_cache_dtype,
+        kv_cache_config=kv_cache_config,
+        attn_backend=args.attention_backend,
+        use_cuda_graph=args.use_cuda_graph,
+        cuda_graph_padding_enabled=args.cuda_graph_padding_enabled,
+        cuda_graph_batch_sizes=args.cuda_graph_batch_sizes,
+        load_format=args.load_format,
+        print_iter_log=args.print_iter_log,
+        enable_iter_perf_stats=args.print_iter_log,
+        torch_compile_config=TorchCompileConfig(
+            enable_fullgraph=args.use_torch_compile,
+            enable_inductor=args.use_torch_compile,
+            enable_piecewise_cuda_graph= \
+                args.use_piecewise_cuda_graph)
+        if args.use_torch_compile else None,
+        moe_backend=args.moe_backend,
+        enable_trtllm_sampler=args.enable_trtllm_sampler,
+        max_seq_len=args.max_seq_len,
+        max_batch_size=args.max_batch_size,
+        max_num_tokens=args.max_num_tokens,
+        enable_attention_dp=args.enable_attention_dp,
+        tensor_parallel_size=args.tp_size,
+        pipeline_parallel_size=args.pp_size,
+        moe_expert_parallel_size=args.moe_ep_size,
+        moe_tensor_parallel_size=args.moe_tp_size,
+        moe_cluster_parallel_size=args.moe_cluster_size,
+        enable_chunked_prefill=args.enable_chunked_prefill,
+        speculative_config=spec_config,
+        trust_remote_code=args.trust_remote_code,
+        gather_generation_logits=args.return_generation_logits)
 
-prompt = "Write a short summary of the benefits of regular exercise"
+    sampling_params = SamplingParams(
+        end_id=127960,
+        max_tokens=args.max_tokens,
+        temperature=args.temperature,
+        top_k=args.top_k,
+        top_p=args.top_p,
+        return_context_logits=args.return_context_logits,
+        return_generation_logits=args.return_generation_logits,
+        logprobs=args.logprobs)
+    return llm, sampling_params
+
 
 def main():
     args = parse_arguments()
+    prompts = args.prompt if args.prompt else example_prompts
 
     llm, sampling_params = setup_llm(args)
     new_prompts = []
-    if args.apply_chat_template:
+    for prompt in prompts:
         messages = [{"role": "user", "content": f"{prompt}"}]
-        new_prompts.append(llm.tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True)
-        )
-
-    outputs = llm.generate(new_prompts, sampling_params)
+        new_prompts.append(
+            llm.tokenizer.apply_chat_template(messages,
+                                                tokenize=False,
+                                                add_generation_prompt=True))
+    prompts = new_prompts
+    outputs = llm.generate(prompts, sampling_params)
 
     for i, output in enumerate(outputs):
         prompt = output.prompt
@@ -380,7 +431,7 @@ def main():
 运行方式：
 
 ```shell
-python3 quickstart_advanced.py --model_dir "HunyuanLLM模型路径" --tp_size 4 --apply_chat_template
+python3 quickstart_advanced.py --model_dir "HunyuanLLM模型路径" --tp_size 4
 ```
 
 #### 方式2：服务化推理
@@ -617,7 +668,7 @@ sh openapi.sh
 
 ### 性能评估：
 
-本部分介绍采用vLLM部署各个模型（原始模型和量化模型）的效率测试结果，包括不同Batchsize下的推理速度(tokens/s), 测试环境（腾讯云，H80（96G）GPU x 卡数）:
+本部分介绍采用vLLM部署各个模型（原始模型和量化模型）的效率测试结果，包括不同Batchsize下的推理速度(tokens/s), 测试环境（腾讯云，H20（96G）GPU x 卡数）:
 
 测试命令：
 ```python
