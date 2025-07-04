@@ -140,7 +140,8 @@ Hunyuan-A13B provides processes related to model training. Please refer to [Trai
 
 
 ## Quantization Compression
-We used our own `AngleSlim` compression tool to produce FP8 and INT4 quantization models. `AngleSlim` compression tool is expected to be open source in early July, which will support one-click quantization and compression of large models, please look forward to it, and you can download our quantization models directly for deployment testing now.
+
+We used our own [AngelSlim](https://github.com/Tencent/AngelSlim) compression tool to produce FP8 and INT4 quantization models. [AngelSlim](https://github.com/Tencent/AngelSlim) support one-click quantization and compression of LLms  models, please refer to [AngelSlim documentation](https://angelslim.readthedocs.io/).
 
 ### FP8 Quantization
 We use FP8-static quantization, FP8 quantization adopts 8-bit floating point format, through a small amount of calibration data (without training) to pre-determine the quantization scale, the model weights and activation values will be converted to FP8 format, to improve the inference efficiency and reduce the deployment threshold. We you can use AngleSlim quantization, you can also directly download our quantization completed open source model to use [Hunyuan-A13B-Instruct-FP8](https://huggingface.co/tencent/Hunyuan-A13B-Instruct-FP8).

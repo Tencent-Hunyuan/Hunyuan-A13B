@@ -279,7 +279,7 @@ Hunyuan-A13B 模型支持通过函数调用（Function Call）来实现 Agent �
 
 ## 量化压缩
 
-我们采用自研的`AngleSlim`压缩工具产出了FP8及INT4量化模型，`AngleSlim`压缩工具预计7月初开源，将支持大模型一键式量化压缩，敬请期待，现在可以直接下载我们的量化模型进行部署测试。
+我们采用自研的开源 [AngelSlim](https://github.com/Tencent/AngelSlim) 压缩工具产出了`FP8`及`INT4`量化模型，[AngelSlim](https://github.com/Tencent/AngelSlim) 支持大模型一键式量化压缩，具体使用方式请参考 [AngelSlim官方文档](https://angelslim.readthedocs.io/).。
 
 ### FP8量化
 我们采用`FP8-static`量化，FP8量化采用8位浮点格式，通过少量校准数据（无需训练）预先确定量化scale，将模型权重与激活值转换为FP8格式，提升推理效率并降低部署门槛。 
@@ -298,7 +298,7 @@ Hunyuan-A13B 模型支持通过函数调用（Function Call）来实现 Agent �
 
 
 ### Int4量化
-Int4量化我们采用[GPTQ](https://arxiv.org/abs/2210.17323 )算法实现W4A16量化，该算法逐层处理模型权重，利用少量校准数据最小化量化后的权重重构误差，通过近似Hessian逆矩阵的优化过程逐层调整权重。流程无需重新训练模型，仅需少量校准数据即可量化权重，提升推理效率并降低部署门槛。
+Int4量化我们采用[GPTQ](https://arxiv.org/abs/2210.17323)算法实现W4A16量化，该算法逐层处理模型权重，利用少量校准数据最小化量化后的权重重构误差，通过近似Hessian逆矩阵的优化过程逐层调整权重。流程无需重新训练模型，仅需少量校准数据即可量化权重，提升推理效率并降低部署门槛。
 您可以使用`AngleSlim`量化，你也可以直接下载我们量化完成的开源模型使用[Hunyuan-A13B-Instruct-Int4](https://huggingface.co/tencent/Hunyuan-A13B-Instruct-GPTQ-Int4)。
 
 #### INT4 Benchmark
