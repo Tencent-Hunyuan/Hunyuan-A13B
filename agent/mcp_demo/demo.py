@@ -35,14 +35,15 @@ class RequestHandle:
         )
         response = response.model_dump()
         text = response["choices"][0]["message"]["content"]
-        if "</think>" in text:
-            think = text[text.find("<think>") + len("<think>"): text.rfind("</think>")].strip()
-            response["choices"][0]["message"]["reasoning_content"] = think
-        resp = None
-        if "</answer>" in text:
-            resp = text[text.find("<answer>") + len("<answer>"): text.rfind("</answer>")].strip()
-            if resp.startswith("助手："):
-                resp = resp[len("助手："):].strip()
+        if text is not None:
+            if "</think>" in text:
+                think = text[text.find("<think>") + len("<think>"): text.rfind("</think>")].strip()
+                response["choices"][0]["message"]["reasoning_content"] = think
+            resp = None
+            if "</answer>" in text:
+                resp = text[text.find("<answer>") + len("<answer>"): text.rfind("</answer>")].strip()
+                if resp.startswith("助手："):
+                    resp = resp[len("助手："):].strip()
         response["choices"][0]["message"]["content"] = resp
         return response
 
@@ -62,9 +63,10 @@ class MCPClient:
         for mcp_name, mcp_config in self.config.items():
             server_params = StdioServerParameters(
                 # 服务器执行的命令，这里我们使用 uv 来运行 web_search.py
-                command=mcp_config["command"],
+                command = mcp_config["command"],
                 # 运行的参数
-                args=mcp_config["args"]
+                args = mcp_config["args"],
+                env = mcp_config.get("env", None)
             )
             async with stdio_client(server_params) as (read, write):
                 async with ClientSession(read, write) as session:

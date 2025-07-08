@@ -279,7 +279,7 @@ Hunyuan-A13B 模型支持通过函数调用（Function Call）来实现 Agent �
 
 ## 量化压缩
 
-我们采用自研的`AngleSlim`压缩工具产出了FP8及INT4量化模型，`AngleSlim`压缩工具预计7月初开源，将支持大模型一键式量化压缩，敬请期待，现在可以直接下载我们的量化模型进行部署测试。
+我们采用自研的开源 [AngelSlim](https://github.com/Tencent/AngelSlim) 压缩工具产出了`FP8`及`INT4`量化模型，[AngelSlim](https://github.com/Tencent/AngelSlim) 支持大模型一键式量化压缩，具体使用方式请参考 [AngelSlim官方文档](https://angelslim.readthedocs.io/).。
 
 ### FP8量化
 我们采用`FP8-static`量化，FP8量化采用8位浮点格式，通过少量校准数据（无需训练）预先确定量化scale，将模型权重与激活值转换为FP8格式，提升推理效率并降低部署门槛。 
@@ -298,7 +298,7 @@ Hunyuan-A13B 模型支持通过函数调用（Function Call）来实现 Agent �
 
 
 ### Int4量化
-Int4量化我们采用[GPTQ](https://arxiv.org/abs/2210.17323 )算法实现W4A16量化，该算法逐层处理模型权重，利用少量校准数据最小化量化后的权重重构误差，通过近似Hessian逆矩阵的优化过程逐层调整权重。流程无需重新训练模型，仅需少量校准数据即可量化权重，提升推理效率并降低部署门槛。
+Int4量化我们采用[GPTQ](https://arxiv.org/abs/2210.17323)算法实现W4A16量化，该算法逐层处理模型权重，利用少量校准数据最小化量化后的权重重构误差，通过近似Hessian逆矩阵的优化过程逐层调整权重。流程无需重新训练模型，仅需少量校准数据即可量化权重，提升推理效率并降低部署门槛。
 您可以使用`AngleSlim`量化，你也可以直接下载我们量化完成的开源模型使用[Hunyuan-A13B-Instruct-Int4](https://huggingface.co/tencent/Hunyuan-A13B-Instruct-GPTQ-Int4)。
 
 #### INT4 Benchmark
@@ -749,17 +749,18 @@ prompts.append(tokenizer.apply_chat_template(
 ))
 print(prompts)
 
-llm = sgl.Engine(
-    model_path=model_path,
-    tp_size=4,
-    trust_remote_code=True,
-    mem_fraction_static=0.7,
-)
+if __name__ == '__main__':
+    llm = sgl.Engine(
+        model_path=model_path,
+        tp_size=4,
+        trust_remote_code=True,
+        mem_fraction_static=0.7,
+    )
 
-sampling_params = {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "max_new_tokens": 4096}
-outputs = llm.generate(prompts, sampling_params)
-for prompt, output in zip(prompts, outputs):
-    print(f"Prompt: {prompt}\nGenerated text: {output['text']}")
+    sampling_params = {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "max_new_tokens": 4096}
+    outputs = llm.generate(prompts, sampling_params)
+    for prompt, output in zip(prompts, outputs):
+        print(f"Prompt: {prompt}\nGenerated text: {output['text']}")
 ```
 
 #### 方式2：服务化推理
@@ -805,6 +806,9 @@ hunyuan-A13B 现已开放网页demo。访问 https://hunyuan.tencent.com/?model=
 
 <br>
 
+## 社区资源
+
+- [Hunyuan-A13B 在 CNB 中快速开始](https://cnb.cool/tencent/hunyuan/examples/Hunyuan-A13B-Quick-Start)
 
 ## 联系我们
 如果你想给我们的研发和产品团队留言，欢迎联系我们腾讯混元LLM团队。你可以通过邮件（hunyuan_opensource@tencent.com）联系我们。
