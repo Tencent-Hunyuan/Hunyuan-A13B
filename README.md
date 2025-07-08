@@ -19,13 +19,15 @@
 
 <p align="center">
     <a href="report/Hunyuan_A13B_Technical_Report.pdf"><b>Technical Report</b> </a> |
-    <a href="https://github.com/Tencent-Hunyuan/Hunyuan-A13B"><b>GITHUB</b></a> | 
-    <a href="https://cnb.cool/tencent/hunyuan/Hunyuan-A13B"><b>cnb.cool</b></a> | 
-    <a href="https://github.com/Tencent-Hunyuan/Hunyuan-A13B/blob/main/LICENSE"><b>LICENSE</b></a>
+    <a href="https://github.com/Tencent-Hunyuan/Hunyuan-A13B"><b>GITHUB</b></a> |
+    <a href="https://cnb.cool/tencent/hunyuan/Hunyuan-A13B"><b>cnb.cool</b></a> |
+    <a href="https://github.com/Tencent-Hunyuan/Hunyuan-A13B/blob/main/LICENSE"><b>LICENSE</b></a> |
+    <a href="https://discord.gg/bsPcMEtV7v"><b>Discord</b></a> |
+    <a href="assets/1751881231452.jpg"><b>WeChat / WeCom</b></a>
 </p>
 
 
-  
+
 Welcome to the official repository of **Hunyuan-A13B**, an innovative and open-source large language model (LLM) built on a fine-grained Mixture-of-Experts (MoE) architecture. Designed for efficiency and scalability, Hunyuan-A13B delivers cutting-edge performance with minimal computational overhead, making it an ideal choice for advanced reasoning and general-purpose applications, especially in resource-constrained environments.
 
 ## Model Introduction
@@ -54,7 +56,7 @@ As a powerful yet computationally efficient large model, Hunyuan-A13B is an idea
 
 ## Benchmark
 
-Note: The following benchmarks are evaluated by TRT-LLM-backend on several **base models**. 
+Note: The following benchmarks are evaluated by TRT-LLM-backend on several **base models**.
 
 | Model            | Hunyuan-Large | Qwen2.5-72B  | Qwen3-A22B | Hunyuan-A13B |
 |------------------|---------------|--------------|-------------|---------------|
@@ -92,7 +94,7 @@ Hunyuan-A13B-Instruct has achieved highly competitive performance across multipl
 
 ## Use with transformers
 
-Our model defaults to using slow-thinking reasoning, and there are two ways to disable CoT reasoning. 
+Our model defaults to using slow-thinking reasoning, and there are two ways to disable CoT reasoning.
 1. Pass "enable_thinking=False" when calling apply_chat_template.
 2. Adding "/no_think" before the prompt will force the model not to use perform CoT reasoning. Similarly, adding "/think" before the prompt will force the model to perform CoT reasoning.
 
@@ -116,7 +118,7 @@ messages = [
 tokenized_chat = tokenizer.apply_chat_template(messages, tokenize=True, return_tensors="pt",
                                                 enable_thinking=True # Toggle thinking mode (default: True)
                                                 )
-                                                
+
 outputs = model.generate(tokenized_chat.to(model.device), max_new_tokens=4096)
 
 output_text = tokenizer.decode(outputs[0])
@@ -149,7 +151,7 @@ We use FP8-static quantization, FP8 quantization adopts 8-bit floating point for
 #### FP8 Benchmark
 This subsection describes the Benchmark metrics for the Hunyuan-80B-A13B-Instruct-FP8 quantitative model.
 
-|   Bench   | Hunyuan-A13B-Instruct | Hunyuan-A13B-Instruct-FP8 | 
+|   Bench   | Hunyuan-A13B-Instruct | Hunyuan-A13B-Instruct-FP8 |
 |:---------:|:---------------------:|:-------------------------:|
 | AIME 2024 |         87.3          |           86.7            |
 |   Gsm8k   |         94.39         |           94.01           |
@@ -162,7 +164,7 @@ We use the GPTQ algorithm to achieve W4A16 quantization, which processes the mod
 #### Int4 Benchmark
 This subsection describes the Benchmark metrics for the Hunyuan-80B-A13B-Instruct-GPTQ-Int4 quantitative model.
 
-|     Bench      | Hunyuan-A13B-Instruct | Hunyuan-A13B-Instruct-GPTQ-Int4 | 
+|     Bench      | Hunyuan-A13B-Instruct | Hunyuan-A13B-Instruct-GPTQ-Int4 |
 |:--------------:|:---------------------:|:-------------------------------:|
 | OlympiadBench  |         82.7          |              84.0               |
 |   AIME 2024    |         87.3          |              86.7               |
@@ -171,22 +173,22 @@ This subsection describes the Benchmark metrics for the Hunyuan-80B-A13B-Instruc
 |      DROP      |         91.1         |              91.05              |
 
 
-## Deployment   
+## Deployment
 
 For deployment, you can use frameworks such as **TensorRT-LLM**, **vLLM**, or **SGLang** to serve the model and create an OpenAI-compatible API endpoint.
 
-image: https://hub.docker.com/r/hunyuaninfer/hunyuan-a13b/tags 
+image: https://hub.docker.com/r/hunyuaninfer/hunyuan-a13b/tags
 
 
 ### TensorRT-LLM
 
-#### Docker Image 
+#### Docker Image
 
 We provide a pre-built Docker image based on the latest version of TensorRT-LLM.
 
 - To get started:
 
-https://hub.docker.com/r/hunyuaninfer/hunyuan-large/tags 
+https://hub.docker.com/r/hunyuaninfer/hunyuan-large/tags
 
 ```
 docker pull hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm
@@ -239,15 +241,15 @@ We provide a pre-built Docker image containing vLLM 0.8.5 with full support for 
 - To get started:
 
 ```
-docker pull docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-vllm 
+docker pull docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-vllm
 or
 docker pull hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-vllm
 ```
 
-- Download Model file: 
+- Download Model file:
   - Huggingface:  will download automicly by vllm.
   - ModelScope: `modelscope download --model Tencent-Hunyuan/Hunyuan-A13B-Instruct`
- 
+
 
 - Start the API server:
 
@@ -258,17 +260,17 @@ docker run  --privileged --user root  --net=host --ipc=host \
         --gpus=all -it --entrypoint python  hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-vllm
  \
          -m vllm.entrypoints.openai.api_server --host 0.0.0.0 --port 8000 \
-         --tensor-parallel-size 4 --model tencent/Hunyuan-A13B-Instruct --trust-remote-code 
+         --tensor-parallel-size 4 --model tencent/Hunyuan-A13B-Instruct --trust-remote-code
 
-``` 
+```
 
 model downloaded by modelscope:
 ```
 docker run  --privileged --user root  --net=host --ipc=host \
         -v ~/.cache/modelscope:/root/.cache/modelscope \
         --gpus=all -it --entrypoint python   hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-vllm \
-         -m vllm.entrypoints.openai.api_server --host 0.0.0.0 --tensor-parallel-size 4 --port 8000 \ 
-         --model /root/.cache/modelscope/hub/models/Tencent-Hunyuan/Hunyuan-A13B-Instruct/ --trust_remote_code  
+         -m vllm.entrypoints.openai.api_server --host 0.0.0.0 --tensor-parallel-size 4 --port 8000 \
+         --model /root/.cache/modelscope/hub/models/Tencent-Hunyuan/Hunyuan-A13B-Instruct/ --trust_remote_code
 ```
 
 #### Quantitative model deployment
@@ -328,7 +330,7 @@ sh openapi.sh
 
 ### SGLang
 
-#### Docker Image 
+#### Docker Image
 
 We also provide a pre-built Docker image based on the latest version of SGLang.
 

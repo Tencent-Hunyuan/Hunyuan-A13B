@@ -16,8 +16,12 @@
 </p>
 
 <p align="center">
+    <a href="report/Hunyuan_A13B_Technical_Report.pdf"><b>Technical Report</b> </a> |
     <a href="https://github.com/Tencent-Hunyuan/Hunyuan-A13B"><b>GITHUB</b></a> |
-    <a href="report/Hunyuan_A13B_Technical_Report.pdf"><b>Technical Report</b></a>
+    <a href="https://cnb.cool/tencent/hunyuan/Hunyuan-A13B"><b>cnb.cool</b></a> |
+    <a href="https://github.com/Tencent-Hunyuan/Hunyuan-A13B/blob/main/LICENSE"><b>LICENSE</b></a> |
+    <a href="https://discord.gg/bsPcMEtV7v"><b>Discord</b></a> |
+    <a href="assets/1751881231452.jpg"><b>微信群</b></a>
 </p>
 
 
@@ -29,12 +33,12 @@
 
 
 ### 核心特性与优势
-- ​**小参数量，高性能**​：仅激活130亿参数（总参数量800亿），即可在多样化基准任务中媲美更大规模模型的竞争力表现 
-- ​**混合推理支持**​：同时支持快思考和慢思考两种模式，支持用户灵活选择 
+- ​**小参数量，高性能**​：仅激活130亿参数（总参数量800亿），即可在多样化基准任务中媲美更大规模模型的竞争力表现
+- ​**混合推理支持**​：同时支持快思考和慢思考两种模式，支持用户灵活选择
 - ​**超长上下文理解**​：原生支持256K上下文窗口，在长文本任务中保持稳定性能
 - ​**增强Agent能力**​：优化Agent能力，在BFCL-v3、τ-Bench、C3-Bench等智能体基准测试中领先
 - ​**高效推理**​：采用分组查询注意力（GQA）策略，支持多量化格式，实现高效推理
-    
+
 
 ### 为何选择Hunyuan-A13B？
 作为兼具强大性能与计算效率的大模型，Hunyuan-A13B是研究者与开发者在资源受限条件下追求高性能的理想选择。无论学术研究、高性价比AI解决方案开发，还是创新应用探索，本模型都能提供强大的基础支持。
@@ -59,9 +63,9 @@ Hunyuan-A13B采用了细粒度混合专家（Fine-grained Mixture of Experts，F
 * 路由策略: Top-8
 * 激活函数: SwiGLU
 * 隐层维度: 4096
-* 专家隐层维度: 3072 
+* 专家隐层维度: 3072
 
-## Benchmark评估榜单 
+## Benchmark评估榜单
 
 **Hunyuan-A13B-Pretrain** 在 12/14 个任务上超越了Hunyuan上一代52B激活参数的MoE模型Hunyuan-Large，证实了它在预训练任务上出色的能力。与业界更大参数量的Dense和MoE模型相比, Hunyuan-A13B在多个代码和数学任务上都取得了最高分数。在MMLU, MMLU-PRO等诸多聚合任务上, Hunyuan-A13B达到了与Qwen3-A22B模型同等的水平，表现出优秀的综合能力。
 
@@ -100,7 +104,7 @@ Hunyuan-A13B采用了细粒度混合专家（Fine-grained Mixture of Experts，F
 
 Hunyuan-A13B 提供了模型训练相关流程，您可以在此章节对训练数据格式进行处理以供模型训练使用。
 
-### 训练数据格式及处理 
+### 训练数据格式及处理
 
 **Hunyuan-A13B-Instruct 同时支持慢思考与快思考两种模式，模型的默认输出是慢思考模式，若想让模型进行快思考，可在 query 前附加上 "/no_think"。**
 
@@ -139,7 +143,7 @@ ids = tokenizer.apply_chat_template(messages)
 
 您可以参照<a href="examples/README.md">快速开始文档</a>中的内容进行快速上手。
 
-## 模型训练 
+## 模型训练
 
 ### 硬件需求
 
@@ -240,7 +244,7 @@ Are you sure you want to continue connecting (yes/no)?
 **注意：**
 
 - 如果想从一个中途保存的 ckpt 继续训练，而不是加载一个预训练的权重，直接指定`--resume_from_checkpoint`为之前训练保存的 ckpt 路径，不要指定`--model_name_or_path`，这样只会加载权重，而不会加载训练状态
-- 从 ckpt 继续训练时，loss 可能会有微小的偏差，这是由一些非确定性算法带来的随机性，是正常现象。参考：[HuggingFace Transformers Trainer Randomness 
+- 从 ckpt 继续训练时，loss 可能会有微小的偏差，这是由一些非确定性算法带来的随机性，是正常现象。参考：[HuggingFace Transformers Trainer Randomness
 - 当 `--model_name_or_path` 有效时，所有模型相关的参数都会被忽略
 - 一个 batch 内的样本会通过 padding 对齐 batch 内最长的样本，而每条样本的长度最长为 max_seq_length，超出的部分会被裁剪
 - 如果报出 bias 权重没有 load 的 warning，忽略即可，Hunyuan-Large 中不会用到 bias
@@ -282,13 +286,13 @@ Hunyuan-A13B 模型支持通过函数调用（Function Call）来实现 Agent �
 我们采用自研的开源 [AngelSlim](https://github.com/Tencent/AngelSlim) 压缩工具产出了`FP8`及`INT4`量化模型，[AngelSlim](https://github.com/Tencent/AngelSlim) 支持大模型一键式量化压缩，具体使用方式请参考 [AngelSlim官方文档](https://angelslim.readthedocs.io/).。
 
 ### FP8量化
-我们采用`FP8-static`量化，FP8量化采用8位浮点格式，通过少量校准数据（无需训练）预先确定量化scale，将模型权重与激活值转换为FP8格式，提升推理效率并降低部署门槛。 
+我们采用`FP8-static`量化，FP8量化采用8位浮点格式，通过少量校准数据（无需训练）预先确定量化scale，将模型权重与激活值转换为FP8格式，提升推理效率并降低部署门槛。
 我们您可以使用`AngleSlim`量化，你也可以直接下载我们量化完成的开源模型使用[Hunyuan-A13B-Instruct-FP8](https://huggingface.co/tencent/Hunyuan-A13B-Instruct-FP8)。
 
 #### FP8 Benchmark
 本小节介绍 Hunyuan-A13B-Instruct-FP8 量化模型的Benchmark指标。
 
-|   Bench   | Hunyuan-A13B-Instruct | Hunyuan-A13B-Instruct-FP8 | 
+|   Bench   | Hunyuan-A13B-Instruct | Hunyuan-A13B-Instruct-FP8 |
 |:---------:|:---------------------:|:-------------------------:|
 | AIME 2024 |         87.3          |           86.7            |
 |   Gsm8k   |         94.39         |           94.01           |
@@ -304,7 +308,7 @@ Int4量化我们采用[GPTQ](https://arxiv.org/abs/2210.17323)算法实现W4A16�
 #### INT4 Benchmark
 本小节介绍 Hunyuan-A13B-Instruct-GPTQ-Int4 量化模型的Benchmark指标。
 
-|     Bench      | Hunyuan-A13B-Instruct | Hunyuan-A13B-Instruct-GPTQ-Int4 | 
+|     Bench      | Hunyuan-A13B-Instruct | Hunyuan-A13B-Instruct-GPTQ-Int4 |
 |:--------------:|:---------------------:|:-------------------------------:|
 | OlympiadBench  |         82.7          |              84.0               |
 |   AIME 2024    |         87.3          |              86.7               |
@@ -314,7 +318,7 @@ Int4量化我们采用[GPTQ](https://arxiv.org/abs/2210.17323)算法实现W4A16�
 
 &nbsp;
 
-## 推理和部署 
+## 推理和部署
 
 HunyuanLLM可以采用TensorRT-LLM, vLLM或sglang部署。为了简化部署过程HunyuanLLM提供了预构建docker镜像，详见一下章节。
 
@@ -334,7 +338,7 @@ docker pull docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-trtllm
 docker pull hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm
 
 # 启动
-docker run --privileged --user root --name hunyuanLLM_infer --rm -it --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 --gpus=all hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm     
+docker run --privileged --user root --name hunyuanLLM_infer --rm -it --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 --gpus=all hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-trtllm
 ```
 
 注: Docker容器权限管理。以上代码采用特权模式（--privileged）启动Docker容器会赋予容器较高的权限，增加数据泄露和集群安全风险。建议在非必要情况下避免使用特权模式，以降低安全威胁。对于必须使用特权模式的场景，应进行严格的安全评估，并实施相应的安全监控、加固措施。
@@ -356,7 +360,7 @@ def setup_llm(args):
         free_gpu_memory_fraction=args.kv_cache_fraction,
     )
     spec_config = None
-    
+
     hf_ckpt_path="$your_hunyuan_model_path"
     tokenizer = AutoTokenizer.from_pretrained(hf_ckpt_path, trust_remote_code=True)
     llm = LLM(
@@ -498,13 +502,13 @@ curl -X POST "http://localhost:8000/v1/chat/completions" \
 [hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-vllm](https://hub.docker.com/r/hunyuaninfer/hunyuan-a13b/tags) 。您只需要下载模型文件并用下面代码启动docker即可开始推理模型。
 ```shell
 # 下载模型：
-# ModelScope: 
+# ModelScope:
 modelscope download --model Tencent-Hunyuan/Hunyuan-A13B-Instruct
 # Huggingface: vllm 会自动下载
 
 # 拉取
 国内：
-docker pull docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-vllm 
+docker pull docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-vllm
 国外：
 docker pull hunyuaninfer/hunyuan-a13b:hunyuan-moe-A13B-vllm
 
@@ -513,14 +517,14 @@ docker run  --privileged --user root  --net=host --ipc=host \
         -v ~/.cache:/root/.cache/ \
         --gpus=all -it --entrypoint python docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-vllm \
          -m vllm.entrypoints.openai.api_server --host 0.0.0.0 --port 8000 \
-         --tensor-parallel-size 4 --model tencent/Hunyuan-A13B-Instruct --trust-remote-code 
+         --tensor-parallel-size 4 --model tencent/Hunyuan-A13B-Instruct --trust-remote-code
 
 # 使用modelscope下载的模型起服务
 docker run  --privileged --user root  --net=host --ipc=host \
         -v ~/.cache/modelscope:/root/.cache/modelscope \
         --gpus=all -it --entrypoint python   docker.cnb.cool/tencent/hunyuan/hunyuan-a13b:hunyuan-moe-A13B-vllm \
          -m vllm.entrypoints.openai.api_server --host 0.0.0.0 --tensor-parallel-size 4 \
-         --port 8000 --model /root/.cache/modelscope/hub/models/Tencent-Hunyuan/Hunyuan-A13B-Instruct/ --trust_remote_code           
+         --port 8000 --model /root/.cache/modelscope/hub/models/Tencent-Hunyuan/Hunyuan-A13B-Instruct/ --trust_remote_code
 ```
 
 注: Docker容器权限管理。以上代码采用特权模式（--privileged）启动Docker容器会赋予容器较高的权限，增加数据泄露和集群安全风险。建议在非必要情况下避免使用特权模式，以降低安全威胁。对于必须使用特权模式的场景，应进行严格的安全评估，并实施相应的安全监控、加固措施。
@@ -796,7 +800,7 @@ print(response)
 #### FP8/Int4量化模型部署：
 目前 sglang 的 fp8 和 int4 量化模型正在支持中，敬请期待。
 
-## 交互式Demo Web 
+## 交互式Demo Web
 hunyuan-A13B 现已开放网页demo。访问 https://hunyuan.tencent.com/?model=hunyuan-a13b 即可简单体验我们的模型。
 
 <br>
